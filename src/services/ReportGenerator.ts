@@ -213,25 +213,9 @@ ${this.assessInvestmentClimate(data)}
 
 ---
 
-## 6. RISK ANALYSIS
+## 6. CONCLUSION AND INVESTMENT RECOMMENDATION
 
-### 6.1 Development Risks
-${this.generateDevelopmentRisks(data, scenarios)}
-
-### 6.2 Market Risks
-${this.generateMarketRisks(data)}
-
-### 6.3 Planning and Regulatory Risks
-${this.generatePlanningRisks(data)}
-
-### 6.4 Financial Risks
-${this.generateFinancialRisks(scenarios, targetProfit)}
-
----
-
-## 7. CONCLUSION AND INVESTMENT RECOMMENDATION
-
-### 7.1 Investment Recommendation: ${scenarios.recommended.strategy}
+### 6.1 Investment Recommendation: ${scenarios.recommended.strategy}
 
 **Overall Assessment:** ${this.getOverallAssessment(data, scenarios)}
 
@@ -241,7 +225,7 @@ ${this.generateInvestmentRationale(data, scenarios)}
 **Critical Success Factors:**
 ${this.generateSuccessFactors(data, scenarios)}
 
-### 7.2 Recommended Action Plan
+### 6.2 Recommended Action Plan
 
 **Immediate Next Steps:**
 1. **Due Diligence:** Commission full structural survey and specialist reports
@@ -259,35 +243,6 @@ ${this.generateSuccessFactors(data, scenarios)}
 1. Market property 4-6 weeks before completion
 2. Target premium end of market for maximum value
 3. Consider rental strategy if market conditions unfavorable
-
-### 7.3 Alternative Scenarios
-If market conditions change or acquisition cannot be secured at recommended price:
-- **Hold Strategy:** Consider buy-to-let with rental yield of ${this.estimateRentalYield(data)}%
-- **Phased Development:** Start with permitted development rights, extend later
-- **Partnership Approach:** Joint venture to reduce individual risk exposure
-
----
-
-## 8. APPENDICES
-
-### Appendix A: Financial Model Assumptions
-- All figures exclude VAT unless otherwise stated
-- Professional fees estimated at 8-12% of construction costs
-- Insurance and utilities during development: £200-300 per month
-- Marketing and legal costs: 1.5-2% of sale price
-
-### Appendix B: Market Data Sources
-- Land Registry Price Paid Data
-- Local authority planning records
-- ${data.comparables.length > 0 ? 'Rightmove and property portals' : 'Area price estimates'}
-- Google Places API for amenities and transport
-
-### Appendix C: Planning Policy References
-Relevant policies that may affect development:
-- National Planning Policy Framework (NPPF)
-- Local Development Plan policies
-- ${data.conservationArea ? 'Conservation Area guidelines' : 'Standard residential policies'}
-- Building Regulations compliance requirements
 
 ---
 
@@ -368,35 +323,10 @@ ${this.getStrategyJustification(scenarios.recommended, scenarios)}
 - 14% annual finance rate (100% LTC)
 - ${this.getFinancialCosts(targetProfit).selling * 100}% selling costs
 
-## SENSITIVITY ANALYSIS
-
-**Break-even Analysis:**
-- Minimum GDV required: £${(scenarios.recommended.maxAcquisitionPrice + scenarios.recommended.refurbCost * 1.05).toLocaleString()}
-- Maximum development cost: £${((scenarios.recommended.gdv * 0.97) - scenarios.recommended.maxAcquisitionPrice).toLocaleString()}
-- Market value risk: ${((scenarios.recommended.gdv - data.currentValue) / data.currentValue * 100).toFixed(1)}% uplift required
-
-**Risk Factors:**
-${scenarios.recommended.risks.map(risk => `- ${risk}`).join('\n')}
-
-## MARKET VALIDATION
-- **Comparable Sales:** ${data.comparables.length} properties analyzed
-- **Price Range:** £${Math.min(...data.comparables.map(c => c.price)).toLocaleString()} - £${Math.max(...data.comparables.map(c => c.price)).toLocaleString()}
-- **Market Confidence:** ${this.getValuationConfidence(data)}
-- **Demand Level:** ${data.marketTrends.demandLevel}
-
-## PLANNING FEASIBILITY
-${this.assessPlanningFeasibility(data)}
-
 ## RECOMMENDATION SUMMARY
 **Investment Grade:** ${this.getInvestmentGrade(scenarios.recommended)}
 **Risk Level:** ${this.getRiskLevel(data, scenarios.recommended)}
 **Market Timing:** ${this.getMarketTiming(data)}
-
-**Next Steps:**
-1. ${scenarios.recommended.roi > 20 ? 'Proceed with detailed due diligence' : 'Seek alternative opportunities or renegotiate terms'}
-2. Obtain professional structural survey (£800-1,200)
-3. Pre-application planning consultation (£150-500)
-4. Secure development finance quotes
 
 ${this.generateDataQualityWarnings(data.dataQuality)}`;
   }
@@ -416,7 +346,7 @@ ${this.generateDataQualityWarnings(data.dataQuality)}`;
 
     // Scenario 2: Extension/conversion
     const extensionCostPsf = 200;
-    const extensionSize = Math.floor(estimatedFloorArea * 0.3); // 30% extension
+    const extensionSize = Math.floor(estimatedFloorArea * 0.3);
     const extensionCost = extensionSize * extensionCostPsf;
     const conversionCost = estimatedFloorArea * 100;
     const totalExtensionCost = extensionCost + conversionCost;
@@ -461,7 +391,6 @@ ${this.generateDataQualityWarnings(data.dataQuality)}`;
   }
 
   private calculateMaxAcquisition(gdv: number, developmentCost: number, costs: FinancialCosts): number {
-    // GDV = Acquisition + Development + Finance + Acquisition Costs + Selling Costs + Profit
     const netGDV = gdv * (1 - costs.selling);
     const availableForAcqAndDev = netGDV / (1 + costs.profit);
     const maxAcquisition = (availableForAcqAndDev - developmentCost) / (1 + costs.acquisition + costs.finance);
@@ -509,10 +438,9 @@ ${this.generateDataQualityWarnings(data.dataQuality)}`;
     const base = baseArea[propertyTypeKey];
     const bedroomMultiplier = Math.max(1, data.bedrooms || 2);
     
-    return Math.round(base * bedroomMultiplier * 0.8); // Conservative estimate
+    return Math.round(base * bedroomMultiplier * 0.8);
   }
 
-  // Additional helper methods continue in the same pattern...
   private assessDevelopmentPotential(data: PropertyData): string {
     const potentials = [];
     
@@ -564,7 +492,6 @@ ${dataQuality.warnings.map((warning: string) => `- ${warning}`).join('\n')}
 **Recommendation:** Consider obtaining additional data sources or professional validation before proceeding.`;
   }
 
-  // Continue with more helper methods for the report generation...
   private generateRiskAssessment(data: PropertyData, scenarios: any): string {
     const risks = [];
     
@@ -572,223 +499,7 @@ ${dataQuality.warnings.map((warning: string) => `- ${warning}`).join('\n')}
       risks.push('**High Risk:** Planning restrictions may significantly limit development options and increase costs');
     }
     
-  private identifyMajorRisks(data: PropertyData): string {
-    const risks = [];
-    
-    if (data.conservationArea || data.listedBuilding) {
-      risks.push('**Planning Restrictions:** May limit development options and increase costs');
-    }
-    
     if (data.marketTrends.demandLevel === 'Low') {
-      risks.push('**Market Demand:** Low local demand may affect sale timeline and pricing');
-    }
-    
-    if (data.comparables.length < 3) {
-      risks.push('**Valuation Uncertainty:** Limited sales data increases pricing risk');
-    }
-
-    if (data.dataQuality.overallScore < 60) {
-      risks.push('**Data Quality:** Limited information may affect accuracy of analysis');
-    }
-    
-    return risks.length > 0 ? risks.map(r => `- ${r}`).join('\n') : '- No major risks identified';
-  }
-
-  private getStrategyJustification(scenario: DevelopmentScenario, allScenarios: any): string {
-    if (scenario.roi > 25) {
-      return 'Highest ROI potential with acceptable risk profile makes this the optimal strategy.';
-    } else if (scenario.strategy.includes('Light')) {
-      return 'Lower risk approach with shorter timeline reduces market exposure while maintaining good margins.';
-    } else {
-      return 'Higher value creation through development justifies increased complexity and timeline.';
-    }
-  }
-
-  private getOverallAssessment(data: PropertyData, scenarios: any): string {
-    if (scenarios.recommended.roi > 25 && data.dataQuality.overallScore > 70) {
-      return 'Excellent investment opportunity with strong fundamentals';
-    } else if (scenarios.recommended.roi > 20) {
-      return 'Good investment opportunity meeting target criteria';
-    } else if (scenarios.recommended.roi > 15) {
-      return 'Marginal investment requiring careful consideration';
-    } else {
-      return 'Below-target returns suggest seeking alternative opportunities';
-    }
-  }
-
-  private generateSuccessFactors(data: PropertyData, scenarios: any): string {
-    const factors = [
-      'Acquire property at or below maximum recommended price',
-      'Maintain development costs within budget (include 10% contingency)',
-      'Complete development within projected timeline',
-      'Market property effectively to achieve target GDV'
-    ];
-
-    if (data.conservationArea || data.listedBuilding) {
-      factors.push('Secure all required planning permissions before commencement');
-    }
-
-    if (scenarios.recommended.timeline.includes('12')) {
-      factors.push('Manage extended development timeline and holding costs');
-    }
-
-    return factors.map(f => `- ${f}`).join('\n');
-  }
-
-  private estimateRentalYield(data: PropertyData): number {
-    // Rough rental yield estimation based on property value
-    const monthlyRent = data.currentValue * 0.006; // 0.6% of value per month (7.2% annual)
-    const annualRent = monthlyRent * 12;
-    return (annualRent / data.currentValue) * 100;
-  }
-
-  private generateDevelopmentRisks(data: PropertyData, scenarios: any): string {
-    const risks = [];
-    
-    risks.push('**Cost Overruns:** Construction costs may exceed estimates (10-20% typical variance)');
-    risks.push('**Timeline Delays:** Planning, weather, or contractor issues may extend timeline');
-    
-    if (scenarios.recommended.strategy.includes('Extend')) {
-      risks.push('**Planning Risk:** Extensions may require full planning permission');
-      risks.push('**Building Regulations:** Compliance costs and potential design changes');
-    }
-    
-    if (data.yearBuilt && data.yearBuilt < 1980) {
-      risks.push('**Structural Issues:** Older properties may have unforeseen structural problems');
-    }
-    
-    return risks.join('\n');
-  }
-
-  private generateMarketRisks(data: PropertyData): string {
-    const risks = [];
-    
-    if (data.marketTrends.priceChange1Year < 3) {
-      risks.push('**Market Stagnation:** Slow price growth may limit value uplift');
-    }
-    
-    if (data.marketTrends.timeOnMarket > 60) {
-      risks.push('**Liquidity Risk:** Extended sale periods may increase holding costs');
-    }
-    
-    risks.push('**Interest Rate Risk:** Rising rates may affect buyer affordability and demand');
-    risks.push('**Economic Downturn:** Recession could impact property values and demand');
-    
-    return risks.join('\n');
-  }
-
-  private generatePlanningRisks(data: PropertyData): string {
-    const risks = [];
-    
-    if (data.conservationArea) {
-      risks.push('**Conservation Area:** Stricter planning requirements and potential refusal');
-    }
-    
-    if (data.listedBuilding) {
-      risks.push('**Listed Building:** Consent required for most alterations, potential delays');
-    }
-    
-    if (data.planningHistory.some(app => app.status === 'Refused')) {
-      risks.push('**Previous Refusals:** History of planning refusals may indicate local authority stance');
-    }
-    
-    risks.push('**Policy Changes:** Local plan updates may affect development rights');
-    
-    return risks.join('\n');
-  }
-
-  private generateFinancialRisks(scenarios: any, targetProfit: number): string {
-    const risks = [];
-    
-    risks.push('**Finance Costs:** Interest rate increases may reduce profitability');
-    risks.push('**Funding Gap:** Difficulty securing development finance at projected rates');
-    
-    if (scenarios.recommended.maxAcquisitionPrice > scenarios.recommended.gdv * 0.7) {
-      risks.push('**High Acquisition Cost:** Limited room for cost overruns or value decline');
-    }
-    
-    risks.push('**Currency Risk:** Material costs affected by exchange rate fluctuations');
-    risks.push('**Cash Flow:** Development funding requirements and timing mismatches');
-    
-    return risks.join('\n');
-  }
-
-  private assessPlanningFeasibility(data: PropertyData): string {
-    const feasibility = [];
-    
-    if (!data.conservationArea && !data.listedBuilding) {
-      feasibility.push('✅ **Good:** No major planning constraints identified');
-    }
-    
-    if (data.planningHistory.length > 0) {
-      const approvedApps = data.planningHistory.filter(app => app.status === 'Approved').length;
-      feasibility.push(`📋 **History:** ${approvedApps}/${data.planningHistory.length} recent applications approved`);
-    }
-    
-    if (data.useClass === 'C3') {
-      feasibility.push('🏠 **Use Class:** Residential use supports development applications');
-    }
-    
-    return feasibility.join('\n') || 'Planning feasibility requires detailed assessment';
-  }
-
-  private getInvestmentGrade(scenario: DevelopmentScenario): string {
-    if (scenario.roi > 30) return 'A+ (Excellent)';
-    if (scenario.roi > 25) return 'A (Very Good)';
-    if (scenario.roi > 20) return 'B+ (Good)';
-    if (scenario.roi > 15) return 'B (Fair)';
-    if (scenario.roi > 10) return 'C (Below Target)';
-    return 'D (Poor)';
-  }
-
-  private getRiskLevel(data: PropertyData, scenario: DevelopmentScenario): string {
-    let riskScore = 0;
-    
-    if (data.conservationArea || data.listedBuilding) riskScore += 2;
-    if (data.marketTrends.demandLevel === 'Low') riskScore += 2;
-    if (data.comparables.length < 3) riskScore += 1;
-    if (scenario.timeline.includes('12')) riskScore += 1;
-    if (data.dataQuality.overallScore < 60) riskScore += 1;
-    
-    if (riskScore >= 5) return 'High';
-    if (riskScore >= 3) return 'Medium';
-    return 'Low';
-  }
-
-  private getMarketTiming(data: PropertyData): string {
-    if (data.marketTrends.priceChange1Year > 8) {
-      return 'Good - Strong market growth';
-    } else if (data.marketTrends.priceChange1Year > 3) {
-      return 'Fair - Moderate growth';
-    } else if (data.marketTrends.priceChange1Year > 0) {
-      return 'Neutral - Slow growth';
-    } else {
-      return 'Caution - Declining market';
-    }
-  }
-
-  private generatePlanningConstraints(data: PropertyData): string {
-    const constraints = [];
-    
-    if (data.conservationArea) {
-      constraints.push('**Conservation Area:** Enhanced planning controls apply to preserve character');
-    }
-    
-    if (data.listedBuilding) {
-      constraints.push('**Listed Building:** Special consent required for alterations affecting historic character');
-    }
-    
-    if (data.article4Direction) {
-      constraints.push('**Article 4 Direction:** Permitted development rights withdrawn in this area');
-    }
-    
-    // Add general constraints
-    constraints.push('**Building Regulations:** All structural work must comply with current standards');
-    constraints.push('**Party Wall Act:** May apply for extensions affecting neighboring properties');
-    
-    return constraints.join('\n');
-  }
-} 'Low') {
       risks.push('**Medium Risk:** Local market demand is currently weak, affecting sale timeline and pricing');
     }
     
@@ -868,7 +579,6 @@ ${pdOpportunities.map(op => `- ${op}`).join('\n')}
     if (hasRail) score += 3;
     if (hasBus) score += 2;
     
-    // Bonus for multiple options
     if (transportLinks.length > 3) score += 1;
     
     return Math.min(10, score);
@@ -953,4 +663,115 @@ ${pdOpportunities.map(op => `- ${op}`).join('\n')}
       risks.push('**Planning Restrictions:** May limit development options and increase costs');
     }
     
-    if (data.marketTrends.demandLevel ===
+    if (data.marketTrends.demandLevel === 'Low') {
+      risks.push('**Market Demand:** Low local demand may affect sale timeline and pricing');
+    }
+    
+    if (data.comparables.length < 3) {
+      risks.push('**Valuation Uncertainty:** Limited sales data increases pricing risk');
+    }
+
+    if (data.dataQuality.overallScore < 60) {
+      risks.push('**Data Quality:** Limited information may affect accuracy of analysis');
+    }
+    
+    return risks.length > 0 ? risks.map(r => `- ${r}`).join('\n') : '- No major risks identified';
+  }
+
+  private getStrategyJustification(scenario: DevelopmentScenario, _allScenarios: any): string {
+    if (scenario.roi > 25) {
+      return 'Highest ROI potential with acceptable risk profile makes this the optimal strategy.';
+    } else if (scenario.strategy.includes('Light')) {
+      return 'Lower risk approach with shorter timeline reduces market exposure while maintaining good margins.';
+    } else {
+      return 'Higher value creation through development justifies increased complexity and timeline.';
+    }
+  }
+
+  private getOverallAssessment(data: PropertyData, scenarios: any): string {
+    if (scenarios.recommended.roi > 25 && data.dataQuality.overallScore > 70) {
+      return 'Excellent investment opportunity with strong fundamentals';
+    } else if (scenarios.recommended.roi > 20) {
+      return 'Good investment opportunity meeting target criteria';
+    } else if (scenarios.recommended.roi > 15) {
+      return 'Marginal investment requiring careful consideration';
+    } else {
+      return 'Below-target returns suggest seeking alternative opportunities';
+    }
+  }
+
+  private generateSuccessFactors(data: PropertyData, scenarios: any): string {
+    const factors = [
+      'Acquire property at or below maximum recommended price',
+      'Maintain development costs within budget (include 10% contingency)',
+      'Complete development within projected timeline',
+      'Market property effectively to achieve target GDV'
+    ];
+
+    if (data.conservationArea || data.listedBuilding) {
+      factors.push('Secure all required planning permissions before commencement');
+    }
+
+    if (scenarios.recommended.timeline.includes('12')) {
+      factors.push('Manage extended development timeline and holding costs');
+    }
+
+    return factors.map(f => `- ${f}`).join('\n');
+  }
+
+  private getInvestmentGrade(scenario: DevelopmentScenario): string {
+    if (scenario.roi > 30) return 'A+ (Excellent)';
+    if (scenario.roi > 25) return 'A (Very Good)';
+    if (scenario.roi > 20) return 'B+ (Good)';
+    if (scenario.roi > 15) return 'B (Fair)';
+    if (scenario.roi > 10) return 'C (Below Target)';
+    return 'D (Poor)';
+  }
+
+  private getRiskLevel(data: PropertyData, scenario: DevelopmentScenario): string {
+    let riskScore = 0;
+    
+    if (data.conservationArea || data.listedBuilding) riskScore += 2;
+    if (data.marketTrends.demandLevel === 'Low') riskScore += 2;
+    if (data.comparables.length < 3) riskScore += 1;
+    if (scenario.timeline.includes('12')) riskScore += 1;
+    if (data.dataQuality.overallScore < 60) riskScore += 1;
+    
+    if (riskScore >= 5) return 'High';
+    if (riskScore >= 3) return 'Medium';
+    return 'Low';
+  }
+
+  private getMarketTiming(data: PropertyData): string {
+    if (data.marketTrends.priceChange1Year > 8) {
+      return 'Good - Strong market growth';
+    } else if (data.marketTrends.priceChange1Year > 3) {
+      return 'Fair - Moderate growth';
+    } else if (data.marketTrends.priceChange1Year > 0) {
+      return 'Neutral - Slow growth';
+    } else {
+      return 'Caution - Declining market';
+    }
+  }
+
+  private generatePlanningConstraints(data: PropertyData): string {
+    const constraints = [];
+    
+    if (data.conservationArea) {
+      constraints.push('**Conservation Area:** Enhanced planning controls apply to preserve character');
+    }
+    
+    if (data.listedBuilding) {
+      constraints.push('**Listed Building:** Special consent required for alterations affecting historic character');
+    }
+    
+    if (data.article4Direction) {
+      constraints.push('**Article 4 Direction:** Permitted development rights withdrawn in this area');
+    }
+    
+    constraints.push('**Building Regulations:** All structural work must comply with current standards');
+    constraints.push('**Party Wall Act:** May apply for extensions affecting neighboring properties');
+    
+    return constraints.join('\n');
+  }
+}

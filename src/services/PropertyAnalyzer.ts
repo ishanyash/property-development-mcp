@@ -252,7 +252,7 @@ export class PropertyAnalyzer {
     }
   }
 
-  private async getPropertyDetails(address: string, coords: { lat: number; lng: number }) {
+  private async getPropertyDetails(address: string, _coords: { lat: number; lng: number }) {
     this.logger.debug(`Getting property details for: ${address}`);
     
     try {
@@ -268,7 +268,7 @@ export class PropertyAnalyzer {
       
       if (!propertyDetails || propertyDetails.currentValue === 0) {
         // Fallback to other sources or estimations
-        propertyDetails = await this.estimatePropertyDetails(address, coords);
+        propertyDetails = await this.estimatePropertyDetails(address);
       }
 
       this.cache.set(cacheKey, propertyDetails);
@@ -316,7 +316,7 @@ export class PropertyAnalyzer {
     }
   }
 
-  private async estimatePropertyDetails(address: string, coords: { lat: number; lng: number }) {
+  private async estimatePropertyDetails(address: string) {
     // Fallback estimation based on area and postcode
     const postcode = this.extractPostcode(address);
     const postcodeArea = postcode.substring(0, 2);
@@ -341,7 +341,7 @@ export class PropertyAnalyzer {
     };
   }
 
-  private async getPlanningHistory(address: string, coords: { lat: number; lng: number }): Promise<PlanningApplication[]> {
+  private async getPlanningHistory(address: string, _coords: { lat: number; lng: number }): Promise<PlanningApplication[]> {
     this.logger.debug(`Getting planning history for: ${address}`);
     
     try {

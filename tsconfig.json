@@ -1,15 +1,16 @@
 {
     "compilerOptions": {
       "target": "ES2022",
-      "module": "commonjs",
+      "module": "ESNext",
+      "moduleResolution": "bundler",
       "lib": ["ES2022"],
       "outDir": "./dist",
       "rootDir": "./src",
       "strict": true,
       "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node",
       "resolveJsonModule": true,
       "declaration": true,
       "declarationMap": true,
@@ -20,7 +21,7 @@
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "exactOptionalPropertyTypes": true,
-      "allowSyntheticDefaultImports": true
+      "verbatimModuleSyntax": false
     },
     "include": [
       "src/**/*"
@@ -29,8 +30,5 @@
       "node_modules",
       "dist",
       "**/*.test.ts"
-    ],
-    "ts-node": {
-      "esm": true
-    }
+    ]
   }

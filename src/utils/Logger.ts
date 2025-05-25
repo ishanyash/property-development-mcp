@@ -10,18 +10,18 @@ export enum LogLevel {
     level: string;
     message: string;
     data?: any;
-    context?: string;
+    context?: string | undefined;
   }
   
   export class Logger {
     private level: LogLevel;
-    private context?: string;
+    private context?: string | undefined;
     private logHistory: LogEntry[] = [];
     private maxHistorySize: number = 1000;
   
     constructor(
       level: LogLevel = LogLevel.INFO,
-      context?: string,
+      context?: string | undefined,
       maxHistorySize: number = 1000
     ) {
       this.level = level;
@@ -191,17 +191,25 @@ export enum LogLevel {
       warnCount: number;
       infoCount: number;
       debugCount: number;
-      oldestEntry?: string;
-      newestEntry?: string;
+      oldestEntry?: string | undefined;
+      newestEntry?: string | undefined;
     } {
-      const stats = {
+      const stats: {
+        totalLogs: number;
+        errorCount: number;
+        warnCount: number;
+        infoCount: number;
+        debugCount: number;
+        oldestEntry?: string | undefined;
+        newestEntry?: string | undefined;
+      } = {
         totalLogs: this.logHistory.length,
         errorCount: 0,
         warnCount: 0,
         infoCount: 0,
         debugCount: 0,
-        oldestEntry: undefined as string | undefined,
-        newestEntry: undefined as string | undefined
+        oldestEntry: undefined,
+        newestEntry: undefined
       };
   
       if (this.logHistory.length > 0) {

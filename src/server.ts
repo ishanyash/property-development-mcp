@@ -3,7 +3,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
-  Tool,
 } from '@modelcontextprotocol/sdk/types.js';
 import { PropertyAnalyzer } from './services/PropertyAnalyzer.js';
 import { ReportGenerator } from './services/ReportGenerator.js';
@@ -34,18 +33,11 @@ class PropertyDevelopmentServer {
     );
     this.cache = new CacheService();
 
-    // Initialize MCP server
-    this.server = new Server(
-      {
-        name: 'property-development-agent',
-        version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
-      }
-    );
+    // Initialize MCP server - only pass the first parameter
+    this.server = new Server({
+      name: 'property-development-agent',
+      version: '1.0.0',
+    });
 
     this.propertyAnalyzer = new PropertyAnalyzer(this.logger, this.cache);
     this.reportGenerator = new ReportGenerator(this.logger);
@@ -132,18 +124,22 @@ class PropertyDevelopmentServer {
       }
 
       try {
+        if (!args) {
+          throw new Error('No arguments provided');
+        }
+
         switch (name) {
           case 'analyze_property':
             return await this.analyzeProperty(
               args.address as string,
-              args.analysisType as string || 'comprehensive'
+              (args.analysisType as string) || 'comprehensive'
             );
           
           case 'generate_development_report':
             return await this.generateReport(
               args.address as string,
-              args.reportType as string || 'full',
-              args.targetProfit as number || 0.25
+              (args.reportType as string) || 'full',
+              (args.targetProfit as number) || 0.25
             );
           
           default:

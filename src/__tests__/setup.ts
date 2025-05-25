@@ -3,10 +3,23 @@
  * This file is run before each test file
  */
 
-import axios from 'axios';
+import { jest } from '@jest/globals';
 
-// Mock axios globally
-jest.mock('axios');
+// Mock axios globally for ES modules
+jest.unstable_mockModule('axios', () => ({
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+    create: jest.fn(() => ({
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      delete: jest.fn()
+    }))
+  }
+}));
 
 // Extend Jest matchers if needed
 expect.extend({

@@ -170,14 +170,14 @@ interface RateLimitConfig {
       const now = Date.now();
       const keysToDelete: string[] = [];
       
-      for (const [key, requests] of this.requests.entries()) {
-        const validRequests = requests.filter(
+      for (const [key, _requestsArray] of this.requests.entries()) {
+        const validRequests = _requestsArray.filter(
           request => now - request.timestamp < this.config.windowMs
         );
         
         if (validRequests.length === 0) {
           keysToDelete.push(key);
-        } else if (validRequests.length !== requests.length) {
+        } else if (validRequests.length !== _requestsArray.length) {
           this.requests.set(key, validRequests);
         }
       }
@@ -216,7 +216,7 @@ interface RateLimitConfig {
         successRate: number;
       }> = [];
   
-      for (const [key, requests] of this.requests.entries()) {
+      for (const [key] of this.requests.entries()) {
         const validRequests = this.getValidRequests(key, now);
         const successfulRequests = validRequests.filter(r => r.success).length;
         
