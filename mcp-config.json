@@ -1,0 +1,39 @@
+{
+    "servers": {
+      "property-development": {
+        "command": "node",
+        "args": ["dist/server.js"],
+        "env": {
+          "NODE_ENV": "production"
+        },
+        "cwd": ".",
+        "timeout": 30000,
+        "capabilities": {
+          "tools": {
+            "analyze_property": {
+              "description": "Analyze a property for development potential",
+              "cache": true,
+              "rateLimit": {
+                "requests": 10,
+                "window": "1m"
+              }
+            },
+            "generate_development_report": {
+              "description": "Generate comprehensive property development report",
+              "cache": true,
+              "rateLimit": {
+                "requests": 5,
+                "window": "1m"
+              }
+            }
+          }
+        }
+      }
+    },
+    "globalSettings": {
+      "logLevel": "info",
+      "timeout": 60000,
+      "retryAttempts": 3,
+      "retryDelay": 1000
+    }
+  }
